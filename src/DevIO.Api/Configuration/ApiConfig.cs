@@ -16,7 +16,7 @@ namespace DevIO.Api.Configuration
                 options.SuppressModelStateInvalidFilter = true;
             });
 
-            // Permite ualquer origem qualquer metodo qualquer credencial
+            // Permite qualquer origem qualquer metodo qualquer credencial
             services.AddCors(options =>
             {
                 options.AddPolicy("Development",

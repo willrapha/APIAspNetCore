@@ -26,6 +26,8 @@ namespace DevIO.Api
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
             });
 
+            services.AddIdentityConfiguration(Configuration);
+
             services.AddAutoMapper(typeof(Startup)); // Busca tudo que foi implementado pelo 'Profile'
 
             services.ResolveDependencies(); // extension metodo de dependencias
@@ -44,6 +46,8 @@ namespace DevIO.Api
             {
                 app.UseHsts();
             }
+
+            app.UseAuthentication(); // Identity - é necessario ele sempre vir antes do 'UseMvcConfiguration' senão não vai funcionar
 
             app.UseMvcConfiguration();
         }
