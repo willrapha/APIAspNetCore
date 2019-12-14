@@ -25,9 +25,10 @@ namespace DevIO.Api.Controllers
             INotificador notificador,
             SignInManager<IdentityUser> signInManager,
             UserManager<IdentityUser> userManager,
-             IOptions<AppSettings> appSettings // Utilizamos o IOptions - Porque vamos pegar os dados que irão servir de parametros
+            IOptions<AppSettings> appSettings, // Utilizamos o IOptions - Porque vamos pegar os dados que irão servir de parametros
+            IUser user
             ) 
-            : base(notificador)
+            : base(notificador, user)
         {
             _signInManager = signInManager;
             _userManager = userManager;
