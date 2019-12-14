@@ -7,6 +7,7 @@ using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
@@ -85,7 +86,7 @@ namespace DevIO.Api.Controllers
             return CustomResponse(loginUser);
         }
 
-        private async Task<string> GerarJwt(string email)
+        private async Task<LoginResponseViewModel> GerarJwt(string email)
         {
             var user = await _userManager.FindByEmailAsync(email);
             var claims = await _userManager.GetClaimsAsync(user); // claims do usuario
@@ -120,7 +121,23 @@ namespace DevIO.Api.Controllers
 
             var encodedToken = tokenHandler.WriteToken(token); // Serializamos nosso token para ficar compativel com padrao da web
 
-            return encodedToken;
+            var response = new LoginResponseViewModel
+            {
+                AccessToken = encodedToken,
+                ExpiresIn = TimeSpan.FromHours(_appSettings.ExpiracaoHoras).TotalSeconds,
+                UserToken = new UserTokenViewModel
+                {
+                    Id = user.Id,
+                    Email = user.Email,
+                    Claims = claims.Select(c => new ClaimViewModel
+                    {
+                        Type = c.Type,
+                        Value = c.Value
+                    })
+                }
+            };
+
+            return response;
         }
 
         // EpochDate segundos relativo a data que estamos passando

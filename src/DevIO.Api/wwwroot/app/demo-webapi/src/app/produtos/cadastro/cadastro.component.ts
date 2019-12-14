@@ -55,7 +55,7 @@ export class CadastroComponent implements OnInit {
       let produtoForm = Object.assign({}, this.produto, this.produtoForm.value);
       produtoForm.ativo = this.produtoForm.get('ativo').value
 
-      this.produtoHandleAlternativo(produtoForm)
+      this.produtoHandle(produtoForm)
         .subscribe(
           result => { this.onSaveComplete(result) },
           fail => { this.onError(fail) }
