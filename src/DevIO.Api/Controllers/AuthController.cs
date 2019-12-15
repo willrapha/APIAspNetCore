@@ -15,7 +15,9 @@ using System.Threading.Tasks;
 
 namespace DevIO.Api.Controllers
 {
-    [Route("api")]
+    [ApiVersion("2.0")]
+    [ApiVersion("1.0", Deprecated = true)]
+    [Route("api/v{version:apiVersion}")]
     //[DisableCors] // Ngm de fora vai conseguir chamar nenhum metodo dessa controller
     public class AuthController : MainController
     {
