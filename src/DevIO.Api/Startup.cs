@@ -38,12 +38,15 @@ namespace DevIO.Api
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
+            // é necessario ele sempre vir antes do 'UseMvcConfiguration' senão não vai funcionar
             if (env.IsDevelopment())
             {
+                app.UseCors("Development"); // Permite qualquer origem qualquer metodo qualquer credencial
                 app.UseDeveloperExceptionPage();
             }
             else
             {
+                app.UseCors("Production");
                 app.UseHsts();
             }
 

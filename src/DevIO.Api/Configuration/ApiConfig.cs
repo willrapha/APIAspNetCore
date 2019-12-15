@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Net.Http.Headers;
 
 namespace DevIO.Api.Configuration
 {
@@ -15,24 +16,41 @@ namespace DevIO.Api.Configuration
             {
                 options.SuppressModelStateInvalidFilter = true;
             });
-
-            // Permite qualquer origem qualquer metodo qualquer credencial
+            
+            // Cors - não é um recurso de segurança, nem tudo usa Cors, ele server para relaxar um pouco a forma de outras origem acessarem a aplicação
             services.AddCors(options =>
             {
+                // Permite qualquer origem qualquer metodo qualquer credencial
                 options.AddPolicy("Development",
                     builder => builder.AllowAnyOrigin()
                     .AllowAnyMethod()
                     .AllowAnyHeader()
                     .AllowCredentials());
+
+                /* Politica padrao
+                options.AddDefaultPolicy(
+                    builder =>
+                        builder
+                            .AllowAnyOrigin()
+                            .AllowAnyMethod()
+                            .AllowAnyHeader()
+                            .AllowCredentials());*/
+
+                options.AddPolicy("Production",
+                    builder =>
+                        builder
+                            .WithMethods("GET", "POST") // Permitido metodos apenas com verbo GET e POST
+                            .WithOrigins("http://desenvolvedor.io") // Apenas para origem deste site
+                            .SetIsOriginAllowedToAllowWildcardSubdomains() // E sub dominios
+                            //.WithHeaders(HeaderNames.ContentType, "x-custom-header") // Apenas para esse tipo de header
+                            .AllowAnyHeader());
             });
 
             return services;
         }
 
         public static IApplicationBuilder UseMvcConfiguration(this IApplicationBuilder app)
-        {
-            // Permite qualquer origem qualquer metodo qualquer credencial
-            app.UseCors("Development");
+        { 
             app.UseHttpsRedirection();
             app.UseMvc();
 
