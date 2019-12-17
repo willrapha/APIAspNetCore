@@ -29,6 +29,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="V2\" />
     <Folder Include="wwwroot\" />
   </ItemGroup>
 
