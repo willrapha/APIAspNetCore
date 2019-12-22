@@ -17,6 +17,8 @@
 
   <ItemGroup>
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="7.0.0" />
+    <PackageReference Include="Elmah.Io.AspNetCore" Version="3.6.63" />
+    <PackageReference Include="Elmah.Io.Extensions.Logging" Version="3.4.38" />
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="4.1.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning.ApiExplorer" Version="4.1.0" />
@@ -31,7 +33,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="V2\" />
     <Folder Include="wwwroot\" />
   </ItemGroup>
 
