@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
@@ -6,6 +7,7 @@ using Swashbuckle.AspNetCore.Swagger;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace DevIO.Api.Configuration
 {
@@ -21,12 +23,12 @@ namespace DevIO.Api.Configuration
                 // Autenticacao no swagger
                 var security = new Dictionary<string, IEnumerable<string>>
                 {
-                    {"Bearer ", new string[] {}}
+                    {"Bearer", new string[] { }}
                 };
 
                 c.AddSecurityDefinition("Bearer", new ApiKeyScheme
                 {
-                    Description = "Insira o token JWT deste maineira: Nearer {seu token}",
+                    Description = "Insira o token JWT deste maineira: Bearer {seu token}",
                     Name = "Authorization", // Tipo de dado que vai no header
                     In = "header", // header do request
                     Type = "apiKey"
@@ -42,6 +44,8 @@ namespace DevIO.Api.Configuration
 
         public static IApplicationBuilder UseSwaggerConfig(this IApplicationBuilder app, IApiVersionDescriptionProvider provider)
         {
+            // Middleware para restringir acesso ao swagger
+            // app.UseMiddleware<SwaggerAuthorizedMiddleware>(); // Tem que ser chamado antes do swagger
             app.UseSwagger();
 
             // Gera um EndPoint para cada versão
@@ -126,6 +130,30 @@ namespace DevIO.Api.Configuration
 
                 parameter.Required |= description.IsRequired;
             }
+        }  
+    }
+
+    // Classe para restringir o acesso ao Swagger
+    public class SwaggerAuthorizedMiddleware
+    {
+        private readonly RequestDelegate _next;
+
+        public SwaggerAuthorizedMiddleware(RequestDelegate next)
+        {
+            _next = next;
+        }
+
+        public async Task Invoke(HttpContext context)
+        {
+            if (context.Request.Path.StartsWithSegments("/swagger")
+                && !context.User.Identity.IsAuthenticated)
+            {
+                context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+                return;
+            }
+
+            await _next.Invoke(context);
         }
     }
+
 }
