@@ -22,7 +22,7 @@ namespace DevIO.Api.Configuration
             // IdentityUser - classe usuario padrao
             // AddRoles - trabalhar com Roles - passamos o 'IdentityRole' para podermos customizar a politica de roles
             // AddEntityFrameworkStores - dizemos que estamos trabalhando com entity e qual seu contexto
-            // AddDefaultTokenProviders - recurso para gerar tokens
+            // AddDefaultTokenProviders - recurso para gerar tokens - exemplo identificação de Email
             // AddErrorDescriber - erros identity
             services.AddDefaultIdentity<IdentityUser>()
                 .AddRoles<IdentityRole>()
